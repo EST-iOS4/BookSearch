@@ -32,9 +32,9 @@ class AsyncSearchViewModel: ObservableObject {
 
       do {
         try await Task.sleep(nanoseconds: 500_000_000)
-        let searchResults = try await searchBooks(searchTerm: currentTerm)
 
         if !Task.isCancelled {
+          let searchResults = try await searchBooks(searchTerm: currentTerm)
           books = searchResults
         }
       } catch {
@@ -66,8 +66,8 @@ class AsyncSearchViewModel: ObservableObject {
     let (data, _) = try await URLSession.shared.data(from: url)
     let decoder = SearchResultDecoder()
 
-    let result = try decoder.decode(SearchResult.self, from: data)
+    let searchResult = try decoder.decode(SearchResult.self, from: data)
 
-    return result.results
+    return searchResult.results
   }
 }
