@@ -11,7 +11,7 @@ import SwiftUI
 struct BookSearchApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CombineSearchView()
         }
     }
 }
