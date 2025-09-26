@@ -7,20 +7,6 @@
 import Foundation
 import Combine
 
-struct SearchResult: Codable {
-  let query: String
-  let results: [Book]
-  let count: Int
-}
-
-struct Book: Codable, Identifiable {
-  let id: Int
-  let title: String
-  let author: String
-  let publishedDate: Date
-  let createdAt: Date
-}
-
 class CombineSearchViewModel: ObservableObject {
   @Published var searchTerm = ""
 
@@ -40,7 +26,6 @@ class CombineSearchViewModel: ObservableObject {
       .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
       .removeDuplicates()
       .handleEvents(receiveOutput: { [weak self] data in
-        print("1>> \(data)")
         self?.isLoading = true
         self?.errorMessage = ""
       })
@@ -101,13 +86,7 @@ class CombineSearchViewModel: ObservableObject {
 
     return URLSession.shared.dataTaskPublisher(for: url)
       .map(\.data)
-      .handleEvents(receiveOutput: { data in
-        print("2>> \(data)")
-      })
       .decode(type: SearchResult.self, decoder: decoder)
-      .handleEvents(receiveOutput: { data in
-        print("3>> \(data)")
-      })
       .map(\.results)
       .catch { [weak self] error -> AnyPublisher<[Book], Never> in
         DispatchQueue.main.async {
